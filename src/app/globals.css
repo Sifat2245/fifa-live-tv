@@ -1,26 +1,140 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-barlow-condensed);
+  --color-gold: #C9A84C;
+  --color-gold-light: #D4B85A;
+  --color-gold-dark: #A68B2E;
+  --color-crimson: #C41E3A;
+  --color-navy: #0A0E1A;
+  --color-navy-light: #111827;
+  --color-card: #111827;
+  --color-card-hover: #1a2235;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #374151; }
+
+/* ===== Selection ===== */
+::selection { background: rgba(201, 168, 76, 0.25); color: #fbbf24; }
+
+/* ===== Base ===== */
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Glass morphism utility ===== */
+.glass {
+  background: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-gold {
+  background: rgba(201, 168, 76, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+/* ===== Card hover glow ===== */
+.card-glow {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-glow:hover {
+  border-color: rgba(201, 168, 76, 0.4);
+  box-shadow: 0 0 30px rgba(201, 168, 76, 0.08), 0 0 60px rgba(201, 168, 76, 0.04);
+}
+
+/* ===== Animations ===== */
+@keyframes scoreboard-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes stadium-glow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out forwards;
+}
+
+.animate-stadium-glow {
+  animation: stadium-glow 3s ease-in-out infinite;
+}
+
+/* ===== Gold text gradient ===== */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #C9A84C 0%, #D4B85A 40%, #C9A84C 70%, #A68B2E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== Prevent text selection site-wide ===== */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in inputs and textareas */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* ===== Prevent image dragging ===== */
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+/* ===== Responsive video container ===== */
+.video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
 }
