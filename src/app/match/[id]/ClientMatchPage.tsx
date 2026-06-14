@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Tv, RefreshCw, Radio, Shield, ListVideo, Monitor } from "lucide-react";
+import { Tv, Radio, Shield, ListVideo, Monitor } from "lucide-react";
 import type { Match, StreamChannel } from "@/lib/types";
 import StreamPlayer from "@/components/StreamPlayer";
 import ChannelSelector from "@/components/ChannelSelector";
-import { isToday, isLive as checkIsLive, getLocalTime } from "@/lib/utils";
+import { isToday, isLive as checkIsLive, getLocalTime, getFlagUrl } from "@/lib/utils";
 
 interface ClientMatchPageProps {
   match: Match;
@@ -24,6 +24,8 @@ export default function ClientMatchPage({
   const [loading, setLoading] = useState(true);
 
   const live = checkIsLive(match.status);
+  const finished = match.status === "FINISHED";
+  const hasScore = live || finished;
 
   // Fetch channels
   useEffect(() => {
@@ -65,88 +67,144 @@ export default function ClientMatchPage({
     (m) => m.id !== match.id && isToday(m.kickoff)
   );
 
-  return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      {/* ===== LIVE SCORE BANNER ===== */}
-      {live && (
-        <div className="glass mb-5 flex items-center gap-3 rounded-xl border-crimson/20 px-5 py-3">
-          <span className="relative flex h-3 w-3">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-crimson opacity-60" />
-            <span className="relative inline-flex h-3 w-3 rounded-full bg-crimson" />
-          </span>
-          <span className="text-sm font-black text-text-primary tracking-tight">
-            <span className="text-text-secondary font-bold">{match.homeTeam.name}</span>{" "}
-            <span className="text-2xl mx-1.5 tabular-nums">{match.score.home ?? "—"}</span>
-            <span className="text-text-muted">—</span>
-            <span className="text-2xl mx-1.5 tabular-nums">{match.score.away ?? "—"}</span>{" "}
-            <span className="text-text-secondary font-bold">{match.awayTeam.name}</span>
-          </span>
-          <RefreshCw className="ml-auto h-3.5 w-3.5 animate-spin text-text-muted" />
-          <span className="text-[10px] font-medium text-text-muted uppercase tracking-wider">Live</span>
-        </div>
-      )}
+  const homeFlag = getFlagUrl(match.homeTeam.name);
+  const awayFlag = getFlagUrl(match.awayTeam.name);
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-        {/* ===== MAIN CONTENT ===== */}
-        <div className="lg:col-span-3 space-y-4">
-          {/* Player */}
-          <div className="rounded-2xl overflow-hidden bg-black border border-border-default">
-            {loading ? (
-              <div className="flex aspect-video items-center justify-center bg-surface">
-                <div className="flex flex-col items-center gap-3">
-                  <div className="h-10 w-10 animate-spin rounded-full border-2 border-gold/20 border-t-gold" />
-                  <span className="text-xs text-text-muted font-medium tracking-wide">Loading stream...</span>
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+      <div className="space-y-4">
+        {/* ===== MAIN PLAYER ===== */}
+        <div className="relative rounded-2xl overflow-hidden bg-black border border-border-default">
+          {loading ? (
+            <div className="flex aspect-video items-center justify-center bg-surface">
+              <div className="flex flex-col items-center gap-3">
+                <div className="h-10 w-10 animate-spin rounded-full border-2 border-gold/20 border-t-gold" />
+                <span className="text-xs text-text-muted font-medium tracking-wide">Loading stream...</span>
+              </div>
+            </div>
+          ) : activeChannel ? (
+            <StreamPlayer key={activeChannel.id} channel={activeChannel} />
+          ) : (
+            <div className="flex aspect-video items-center justify-center bg-surface-elevated">
+              <div className="flex flex-col items-center gap-3 text-center">
+                <Monitor className="h-12 w-12 text-text-muted" />
+                <div>
+                  <p className="text-sm font-medium text-text-muted">
+                    {channels.length > 0 ? "Select a channel to start watching" : "No streams configured"}
+                  </p>
+                  <p className="mt-1 text-xs text-text-subtle">
+                    {channels.length > 0 ? "Click a channel below" : "Add stream URLs in Manage"}
+                  </p>
                 </div>
               </div>
-            ) : activeChannel ? (
-              <StreamPlayer key={activeChannel.id} channel={activeChannel} />
-            ) : (
-              <div className="flex aspect-video items-center justify-center bg-surface-elevated">
-                <div className="flex flex-col items-center gap-3 text-center">
-                  <Monitor className="h-12 w-12 text-text-muted" />
-                  <div>
-                    <p className="text-sm font-medium text-text-muted">
-                      {channels.length > 0 ? "Select a channel to start watching" : "No streams configured"}
-                    </p>
-                    <p className="mt-1 text-xs text-text-subtle">
-                      {channels.length > 0 ? "Click a channel below" : "Add stream URLs in Manage"}
-                    </p>
+            </div>
+          )}
+
+          {/* ===== SCORE OVERLAY (TV Broadcast Style) ===== */}
+          {hasScore && (
+            <div className="absolute top-3 left-3 right-3 z-10 flex items-start justify-between pointer-events-none">
+              {/* Score bug - bottom-left of player */}
+              <div className="glass rounded-lg px-3 py-2 backdrop-blur-md shadow-lg pointer-events-auto">
+                <div className="flex items-center gap-2.5">
+                  {/* Home */}
+                  <div className="flex items-center gap-1.5">
+                    {homeFlag && (
+                      <img src={homeFlag} alt="" className="h-5 w-8 rounded object-cover shadow-sm" />
+                    )}
+                    <span className={`text-sm font-bold leading-none hidden sm:inline ${
+                      live ? "text-white" : "text-text-tertiary"
+                    }`}>
+                      {match.homeTeam.name}
+                    </span>
+                  </div>
+
+                  {/* Score */}
+                  <div className="flex items-center gap-1">
+                    <span className={`text-xl sm:text-2xl font-black tabular-nums leading-none ${
+                      live ? "text-white" : "text-text-tertiary"
+                    }`}>
+                      {match.score.home ?? "—"}
+                    </span>
+                    <span className={`text-xs font-bold ${
+                      live ? "text-crimson/50" : "text-text-subtle"
+                    }`}>:</span>
+                    <span className={`text-xl sm:text-2xl font-black tabular-nums leading-none ${
+                      live ? "text-white" : "text-text-tertiary"
+                    }`}>
+                      {match.score.away ?? "—"}
+                    </span>
+                  </div>
+
+                  {/* Away */}
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-sm font-bold leading-none hidden sm:inline ${
+                      live ? "text-white" : "text-text-tertiary"
+                    }`}>
+                      {match.awayTeam.name}
+                    </span>
+                    {awayFlag && (
+                      <img src={awayFlag} alt="" className="h-5 w-8 rounded object-cover shadow-sm" />
+                    )}
                   </div>
                 </div>
               </div>
-            )}
-          </div>
 
-          {/* Channel selector */}
-          <div className="glass rounded-xl p-4">
-            <div className="mb-3 flex items-center gap-2">
-              <Radio className="h-4 w-4 text-gold" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-text-tertiary">
-                Available Channels
-              </h3>
-              <span className="rounded-full bg-border-default px-2 py-0.5 text-[10px] text-text-muted">
-                {channels.length}
-              </span>
+              {/* Live badge */}
+              {live && (
+                <div className="glass rounded-full px-2.5 py-1 backdrop-blur-md shadow-lg pointer-events-auto">
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-crimson">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-crimson opacity-60" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-crimson" />
+                    </span>
+                    Live
+                  </span>
+                </div>
+              )}
+
+              {/* Finished badge */}
+              {finished && (
+                <div className="glass rounded-full px-2.5 py-1 backdrop-blur-md shadow-lg pointer-events-auto">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+                    Final
+                  </span>
+                </div>
+              )}
             </div>
-            <ChannelSelector
-              channels={channels}
-              activeId={activeChannelId}
-              onSelect={setActiveChannelId}
-            />
-          </div>
+          )}
         </div>
 
-        {/* ===== SIDEBAR ===== */}
-        <div className="space-y-4">
-          {/* Match details */}
-          <div className="glass rounded-xl p-4">
+        {/* ===== BELOW PLAYER: Channels + Details ===== */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          {/* Channel selector - takes 3 cols */}
+          {channels.length > 0 && (
+            <div className="lg:col-span-3 glass rounded-xl p-4">
+              <div className="mb-3 flex items-center gap-2">
+                <Radio className="h-4 w-4 text-gold" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-text-tertiary">
+                  Available Channels
+                </h3>
+                <span className="rounded-full bg-border-default px-2 py-0.5 text-[10px] text-text-muted">
+                  {channels.length}
+                </span>
+              </div>
+              <ChannelSelector
+                channels={channels}
+                activeId={activeChannelId}
+                onSelect={setActiveChannelId}
+              />
+            </div>
+          )}
+
+          {/* Match Details - takes 1 col */}
+          <div className={`glass rounded-xl p-4 ${channels.length === 0 ? "lg:col-span-4" : ""}`}>
             <div className="mb-3 flex items-center gap-2">
               <ListVideo className="h-4 w-4 text-text-muted" />
               <h3 className="text-xs font-bold uppercase tracking-wider text-text-muted">
                 Match Details
               </h3>
             </div>
-            <div className="space-y-2.5 text-sm">
+            <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-text-muted">Stage</span>
                 <span className="text-text-secondary font-medium">{match.stage.replace(/_/g, " ")}</span>
@@ -159,7 +217,7 @@ export default function ClientMatchPage({
               )}
               <div className="flex justify-between">
                 <span className="text-text-muted">Venue</span>
-                <span className="text-right text-text-secondary font-medium max-w-[140px]">{match.venue}</span>
+                <span className="text-right text-text-secondary font-medium max-w-[160px]">{match.venue}</span>
               </div>
               {match.matchDay && (
                 <div className="flex justify-between">
@@ -169,58 +227,63 @@ export default function ClientMatchPage({
               )}
               <div className="flex justify-between">
                 <span className="text-text-muted">Kickoff</span>
-                <span className="text-text-secondary font-medium">{getLocalTime(match.kickoff)}</span>
+                <span className="text-text-secondary font-medium text-right">{getLocalTime(match.kickoff)}</span>
               </div>
               <div className="flex justify-between pt-1 border-t border-border-default">
                 <span className="text-text-muted">Status</span>
                 <span className={`font-bold ${
-                  live ? "text-crimson" : match.status === "FINISHED" ? "text-text-tertiary" : "text-gold"
+                  live ? "text-crimson" : finished ? "text-text-tertiary" : "text-gold"
                 }`}>
-                  {live ? "● Live" : match.status === "FINISHED" ? "Full Time" : "Scheduled"}
+                  {live ? "● Live" : finished ? "Full Time" : "Scheduled"}
                 </span>
               </div>
             </div>
           </div>
-
-          {/* Other matches today */}
-          {otherMatchesToday.length > 0 && (
-            <div className="glass rounded-xl p-4">
-              <div className="mb-3 flex items-center gap-2">
-                <Tv className="h-4 w-4 text-text-muted" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-text-muted">
-                  Other Matches Today
-                </h3>
-              </div>
-              <div className="space-y-2">
-                {otherMatchesToday.slice(0, 4).map((m) => (
-                  <Link
-                    key={m.id}
-                    href={`/match/${m.id}`}
-                    className="group flex items-center justify-between rounded-lg border border-border-default bg-surface-card/40 px-3 py-2.5 transition-all duration-200 hover:border-border-accent hover:bg-surface-hover"
-                  >
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="text-text-tertiary group-hover:text-text-secondary transition-colors">{m.homeTeam.name}</span>
-                      <span className="text-text-muted">vs</span>
-                      <span className="text-text-tertiary group-hover:text-text-secondary transition-colors">{m.awayTeam.name}</span>
-                    </div>
-                    {checkIsLive(m.status) && (
-                      <span className="text-[9px] font-bold text-crimson uppercase tracking-wider">Live</span>
-                    )}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Manage link */}
-          <Link
-            href="/admin"
-            className="glass flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-xs text-text-muted transition-all duration-200 hover:bg-surface-hover hover:text-text-tertiary hover:border-border-accent"
-          >
-            <Shield className="h-3.5 w-3.5" />
-            Manage Streams
-          </Link>
         </div>
+
+        {/* ===== OTHER MATCHES TODAY ===== */}
+        {otherMatchesToday.length > 0 && (
+          <div className="glass rounded-xl p-4">
+            <div className="mb-3 flex items-center gap-2">
+              <Tv className="h-4 w-4 text-text-muted" />
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text-muted">
+                Other Matches Today
+              </h3>
+              {otherMatchesToday.length > 4 && (
+                <span className="rounded-full bg-border-default px-2 py-0.5 text-[10px] text-text-muted">
+                  {otherMatchesToday.length}
+                </span>
+              )}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+              {otherMatchesToday.slice(0, 8).map((m) => (
+                <Link
+                  key={m.id}
+                  href={`/match/${m.id}`}
+                  className="group flex items-center justify-between rounded-lg border border-border-default bg-surface-card/40 px-3 py-2.5 transition-all duration-200 hover:border-border-accent hover:bg-surface-hover"
+                >
+                  <div className="flex items-center gap-2 text-xs min-w-0">
+                    <span className="text-text-tertiary group-hover:text-text-secondary transition-colors truncate">{m.homeTeam.name}</span>
+                    <span className="text-text-muted flex-shrink-0">vs</span>
+                    <span className="text-text-tertiary group-hover:text-text-secondary transition-colors truncate">{m.awayTeam.name}</span>
+                  </div>
+                  {checkIsLive(m.status) && (
+                    <span className="text-[9px] font-bold text-crimson uppercase tracking-wider flex-shrink-0 ml-2">Live</span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ===== MANAGE LINK ===== */}
+        <Link
+          href="/admin"
+          className="glass flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-xs text-text-muted transition-all duration-200 hover:bg-surface-hover hover:text-text-tertiary hover:border-border-accent"
+        >
+          <Shield className="h-3.5 w-3.5" />
+          Manage Streams
+        </Link>
       </div>
     </div>
   );
