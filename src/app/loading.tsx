@@ -3,14 +3,35 @@ export default function HomeLoading() {
     <div className="flex-1">
       {/* Hero skeleton */}
       <section className="border-b border-border-default/30">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center gap-6">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center gap-8">
             <div className="h-8 w-52 skeleton rounded-full" />
-            <div className="h-16 w-96 skeleton rounded-lg" />
-            <div className="h-5 w-80 skeleton rounded" />
-            <div className="flex gap-6 mt-2">
-              <div className="h-10 w-28 skeleton rounded-lg" />
-              <div className="h-10 w-28 skeleton rounded-lg" />
+            {/* Featured match card skeleton */}
+            <div className="w-full max-w-3xl">
+              <div className="rounded-2xl border border-border-default bg-surface-card overflow-hidden p-6 sm:p-8">
+                {/* Teams row */}
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-1 flex-col items-center gap-3">
+                    <div className="h-20 w-28 skeleton rounded-2xl" />
+                    <div className="h-4 w-20 skeleton rounded" />
+                  </div>
+                  <div className="flex flex-col items-center gap-3 min-w-[100px]">
+                    <div className="h-10 w-16 skeleton rounded" />
+                    <div className="h-5 w-16 skeleton rounded-full" />
+                  </div>
+                  <div className="flex flex-1 flex-col items-center gap-3">
+                    <div className="h-20 w-28 skeleton rounded-2xl" />
+                    <div className="h-4 w-20 skeleton rounded" />
+                  </div>
+                </div>
+                {/* Divider */}
+                <div className="my-5 border-t border-border-default/30" />
+                {/* Bottom row */}
+                <div className="flex items-center justify-between">
+                  <div className="h-4 w-48 skeleton rounded" />
+                  <div className="h-10 w-32 skeleton rounded-xl" />
+                </div>
+              </div>
             </div>
           </div>
         </div>

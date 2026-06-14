@@ -1,8 +1,20 @@
+import Link from "next/link";
 import { fetchMatches } from "@/lib/matches";
+import bannerBg from "@/assets/bannerimg.jpg";
 import MatchGrid from "@/components/MatchGrid";
-import { isLive, isToday, getDateGroupKey, formatDateGroup, getFlagUrl } from "@/lib/utils";
-import { Bolt, Calendar, Trophy, Tv, Radio } from "lucide-react";
+import {
+  isLive,
+  isFinished,
+  isToday,
+  getDateGroupKey,
+  formatDateGroup,
+  getFlagUrl,
+  getLocalTime,
+  getStageLabel,
+} from "@/lib/utils";
+import { Bolt, Calendar, Trophy, MapPin, Play } from "lucide-react";
 import LiveBadge from "@/components/LiveBadge";
+import CountdownTimer from "@/components/CountdownTimer";
 
 export const revalidate = 60;
 
@@ -10,6 +22,19 @@ export default async function HomePage() {
   const matches = await fetchMatches();
 
   const liveMatches = matches.filter((m) => isLive(m.status));
+
+  // Find featured match for the hero banner:
+  // - Prioritise the first live match
+  // - Otherwise the closest upcoming match
+  const featuredMatch =
+    liveMatches.length > 0
+      ? liveMatches[0]
+      : matches
+          .filter((m) => !isLive(m.status) && !isFinished(m.status))
+          .sort(
+            (a, b) =>
+              new Date(a.kickoff).getTime() - new Date(b.kickoff).getTime()
+          )[0] ?? null;
   const todayMatches = matches.filter(
     (m) => isToday(m.kickoff) && !isLive(m.status)
   );
@@ -30,66 +55,185 @@ export default async function HomePage() {
   return (
     <div className="flex-1">
       {/* ===== HERO SECTION ===== */}
-      <section className="relative overflow-hidden border-b border-gold/10">
-        {/* Stadium lights glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(201,168,76,0.08),transparent)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_120%,rgba(196,30,58,0.05),transparent)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.012)_1px,transparent_1px)] bg-[length:24px_24px]" />
+      <section className="relative overflow-hidden border-b border-gold/10 min-h-[420px] sm:min-h-[580px]">
+        {/* Banner background image */}
+        <img
+          src={bannerBg.src}
+          alt=""
+          className="absolute inset-0 w-full h-full object-contain sm:object-cover sm:scale-100"
+          aria-hidden="true"
+        />
+
+        {/* Dark overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-surface/95 via-surface/70 to-surface/40" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(201,168,76,0.15),transparent)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_120%,rgba(196,30,58,0.08),transparent)]" />
 
         {/* Trophy watermark */}
-        <div className="absolute -right-20 -top-20 opacity-[0.015] pointer-events-none select-none">
+        <div className="absolute -right-20 -top-20 opacity-[0.02] pointer-events-none select-none">
           <Trophy className="h-[500px] w-[500px] text-text-primary" strokeWidth={0.5} />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center gap-6 text-center">
-            {/* Badge */}
-            <div className="glass-gold inline-flex items-center gap-2.5 rounded-full px-5 py-2">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-50" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
-              </span>
-              <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-gold">
-                FIFA World Cup 2026
-              </span>
-            </div>
-
-            {/* Headline */}
-            <h1 className="text-5xl font-black tracking-tight sm:text-6xl lg:text-7xl">
-              <span className="text-text-primary">Watch Every</span>
-              <span className="block mt-1 text-gradient-gold font-accent">
-                World Cup Match
-              </span>
-            </h1>
-            <p className="max-w-2xl text-base leading-relaxed text-text-tertiary sm:text-lg">
-              Live streaming from global broadcasters. Free HD quality,
-              no registration, zero ads. Select a match and start watching instantly.
-            </p>
-
-            {/* Quick stats */}
-            <div className="mt-4 flex flex-wrap justify-center gap-6">
-              <div className="flex items-center gap-2 text-xs text-text-muted">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/10">
-                  <Tv className="h-4 w-4 text-gold" />
-                </div>
-                <span className="text-text-tertiary font-medium">{matches.length} Matches</span>
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          {featuredMatch ? (
+            <div className="flex flex-col items-center gap-8">
+              {/* FIFA badge */}
+              <div className="glass-gold inline-flex items-center gap-2.5 rounded-full px-5 py-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-50" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
+                </span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-gold">
+                  FIFA World Cup 2026
+                </span>
               </div>
-              <div className="flex items-center gap-2 text-xs text-text-muted">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-crimson/10">
-                  <Radio className="h-4 w-4 text-crimson" />
-                </div>
-                <span className="text-text-tertiary font-medium">{liveMatches.length} Live Now</span>
-              </div>
-              {liveMatches.length > 0 && (
-                <div className="flex items-center gap-2 text-xs text-text-muted">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500/10">
-                    <Bolt className="h-4 w-4 text-green-400" />
+
+              {/* Featured match card */}
+              <div className="w-full max-w-5xl">
+                <div className="glass relative overflow-hidden rounded-2xl border border-gold/20 p-6 sm:p-8">
+                  {/* Teams row */}
+                  <div className="flex items-center justify-between gap-4">
+                    {/* Home team */}
+                    <div className="flex flex-1 flex-col items-center gap-3">
+                      <div className="relative flex h-20 w-28 items-center justify-center rounded-2xl bg-gradient-to-br from-surface-elevated to-surface-card border border-border-default shadow-lg">
+                        {(() => {
+                          const flag = getFlagUrl(featuredMatch.homeTeam.name);
+                          return flag ? (
+                            <img
+                              src={flag}
+                              alt={featuredMatch.homeTeam.name}
+                              className="h-14 w-20 rounded-xl object-cover"
+                            />
+                          ) : (
+                            <span className="text-lg font-black uppercase text-text-muted">
+                              {featuredMatch.homeTeam.code ||
+                                featuredMatch.homeTeam.name.slice(0, 3)}
+                            </span>
+                          );
+                        })()}
+                      </div>
+                      <span className="text-sm font-bold text-text-primary text-center leading-tight">
+                        {featuredMatch.homeTeam.name}
+                      </span>
+                    </div>
+
+                    {/* Score / VS */}
+                    <div className="flex flex-col items-center gap-3 min-w-[100px]">
+                      {isLive(featuredMatch.status) ? (
+                        <>
+                          <div className="flex items-center gap-2">
+                            <span className="text-4xl font-black text-text-primary tabular-nums">
+                              {featuredMatch.score.home ?? "—"}
+                            </span>
+                            <span className="text-xl font-bold text-crimson/60">:</span>
+                            <span className="text-4xl font-black text-text-primary tabular-nums">
+                              {featuredMatch.score.away ?? "—"}
+                            </span>
+                          </div>
+                          <LiveBadge />
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-4xl font-black text-gold tracking-wider font-accent">
+                            VS
+                          </span>
+                          <div className="flex flex-col items-center gap-1">
+                            <span className="text-xs font-semibold text-text-tertiary">
+                              {getLocalTime(featuredMatch.kickoff)}
+                            </span>
+                            <CountdownTimer kickoff={featuredMatch.kickoff} />
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Away team */}
+                    <div className="flex flex-1 flex-col items-center gap-3">
+                      <div className="relative flex h-20 w-28 items-center justify-center rounded-2xl bg-gradient-to-br from-surface-elevated to-surface-card border border-border-default shadow-lg">
+                        {(() => {
+                          const flag = getFlagUrl(featuredMatch.awayTeam.name);
+                          return flag ? (
+                            <img
+                              src={flag}
+                              alt={featuredMatch.awayTeam.name}
+                              className="h-14 w-20 rounded-xl object-cover"
+                            />
+                          ) : (
+                            <span className="text-lg font-black uppercase text-text-muted">
+                              {featuredMatch.awayTeam.code ||
+                                featuredMatch.awayTeam.name.slice(0, 3)}
+                            </span>
+                          );
+                        })()}
+                      </div>
+                      <span className="text-sm font-bold text-text-primary text-center leading-tight">
+                        {featuredMatch.awayTeam.name}
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-green-400 font-semibold animate-pulse">Watch Live</span>
+
+                  {/* Divider */}
+                  <div className="my-5 border-t border-gold/10" />
+
+                  {/* Bottom row: venue + watch button */}
+                  <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+                    <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-text-muted">
+                      <div className="flex items-center gap-1.5">
+                        <MapPin className="h-3.5 w-3.5 text-text-subtle" />
+                        <span>{featuredMatch.venue?.split(",")[0] || "TBD"}</span>
+                      </div>
+                      <span className="hidden sm:inline text-text-subtle">·</span>
+                      <span>{getStageLabel(featuredMatch.stage)}</span>
+                      {featuredMatch.group && (
+                        <>
+                          <span className="hidden sm:inline text-text-subtle">·</span>
+                          <span>{featuredMatch.group}</span>
+                        </>
+                      )}
+                    </div>
+                    <Link
+                      href={`/match/${featuredMatch.id}`}
+                      className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-gold to-gold-dark px-6 py-3 text-sm font-bold text-navy transition-all duration-300 hover:from-gold-light hover:to-gold hover:shadow-lg hover:shadow-gold/20 active:scale-[0.97]"
+                    >
+                      {isLive(featuredMatch.status) ? (
+                        <>
+                          <span className="relative flex h-2 w-2">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-navy opacity-40" />
+                            <span className="relative inline-flex h-2 w-2 rounded-full bg-navy" />
+                          </span>
+                          Watch Live
+                        </>
+                      ) : (
+                        <>
+                          <Play className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+                          Watch Now
+                        </>
+                      )}
+                    </Link>
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          ) : (
+            /* Fallback when no matches available */
+            <div className="flex flex-col items-center gap-6 text-center">
+              <div className="glass-gold inline-flex items-center gap-2.5 rounded-full px-5 py-2">
+                <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-gold">
+                  FIFA World Cup 2026
+                </span>
+              </div>
+              <h1 className="text-5xl font-black tracking-tight sm:text-6xl lg:text-7xl">
+                <span className="text-text-primary">Watch Every</span>
+                <span className="block mt-1 text-gradient-gold font-accent">
+                  World Cup Match
+                </span>
+              </h1>
+              <p className="max-w-2xl text-base leading-relaxed text-text-tertiary sm:text-lg">
+                Live streaming from global broadcasters. Free HD quality,
+                no registration, zero ads. Select a match and start watching instantly.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
