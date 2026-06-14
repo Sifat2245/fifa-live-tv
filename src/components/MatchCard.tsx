@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Clock, MapPin } from "lucide-react";
 import { getFlagUrl, isLive, isFinished, getLocalTime } from "@/lib/utils";
 import CountdownTimer from "./CountdownTimer";
 import LiveBadge from "./LiveBadge";
+import MatchDetailModal from "./MatchDetailModal";
 import type { Match } from "@/lib/types";
 
 interface MatchCardProps {
@@ -26,18 +28,17 @@ function getTeamColors(name: string): { badge: string; text: string } {
 }
 
 export default function MatchCard({ match }: MatchCardProps) {
+  const [modalOpen, setModalOpen] = useState(false);
   const homeFlag = match.homeTeam?.name ? getFlagUrl(match.homeTeam.name) : "";
   const awayFlag = match.awayTeam?.name ? getFlagUrl(match.awayTeam.name) : "";
   const live = isLive(match.status);
   const finished = isFinished(match.status);
+  const upcoming = !live && !finished;
   const homeColors = getTeamColors(match.homeTeam.name);
   const awayColors = getTeamColors(match.awayTeam.name);
 
-  return (
-    <Link
-      href={`/match/${match.id}`}
-      className="group card-glow relative flex flex-col overflow-hidden rounded-2xl border border-border-default bg-gradient-to-b from-surface-card to-surface-elevated transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-    >
+  const cardContent = (
+    <>
       {/* Top accent bar */}
       <div className={`h-1 w-full bg-gradient-to-r ${
         live ? "from-crimson via-red-500 to-crimson" : "from-gold/30 via-gold/10 to-transparent"
@@ -137,6 +138,35 @@ export default function MatchCard({ match }: MatchCardProps) {
           </div>
         </div>
       </div>
-    </Link>
+    </>
+  );
+
+  return (
+    <>
+      {upcoming ? (
+        <button
+          type="button"
+          onClick={() => setModalOpen(true)}
+          aria-haspopup="dialog"
+          className="group card-glow relative flex flex-col overflow-hidden rounded-2xl border border-border-default bg-gradient-to-b from-surface-card to-surface-elevated transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] text-left w-full cursor-pointer"
+        >
+          {cardContent}
+        </button>
+      ) : (
+        <Link
+          href={`/match/${match.id}`}
+          className="group card-glow relative flex flex-col overflow-hidden rounded-2xl border border-border-default bg-gradient-to-b from-surface-card to-surface-elevated transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+        >
+          {cardContent}
+        </Link>
+      )}
+
+      {modalOpen && (
+        <MatchDetailModal
+          match={match}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
+    </>
   );
 }
