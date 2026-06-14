@@ -5,8 +5,8 @@
       "name": "FIFA+ (English)",
       "country": "INT",
       "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/FIFA_logo.svg/200px-FIFA_logo.svg.png",
-      "streamUrl": "https://jmp2.uk/plu-660c29b5aec9680008f5b4a4.m3u8",
-      "isDefault": false,
+      "streamUrl": "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
+      "isDefault": true,
       "type": "hls",
       "embedUrl": "",
       "youtubeVideoId": ""
@@ -820,7 +820,7 @@
       "country": "BD",
       "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/8/8d/T_Sports_logo.png/250px-T_Sports_logo.png",
       "streamUrl": "https://tvsen7.aynaott.com/tsports-hd/index.m3u8",
-      "isDefault": true,
+      "isDefault": false,
       "type": "hls",
       "embedUrl": "",
       "youtubeVideoId": ""
