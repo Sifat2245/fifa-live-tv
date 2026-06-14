@@ -2,7 +2,7 @@
   "channels": [
     {
       "id": "fifa-en",
-      "name": "FIFA+ (English)",
+      "name": "FIFA+",
       "country": "INT",
       "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/FIFA_logo.svg/200px-FIFA_logo.svg.png",
       "streamUrl": "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
