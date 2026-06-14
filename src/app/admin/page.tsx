@@ -82,7 +82,6 @@ export default function ManagePage() {
     setChannels((prev) =>
       prev.map((ch) => {
         if (ch.id !== editingId) return ch;
-        // Only overwrite URL fields when user enters a new value
         return {
           ...ch,
           name: editForm.name ?? ch.name,
@@ -139,16 +138,16 @@ export default function ManagePage() {
   return (
     <div className="flex-1">
       {/* Header */}
-      <div className="border-b border-zinc-800/60 bg-[#0A0E1A]">
+      <div className="border-b border-border-default bg-surface">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <Monitor className="h-5 w-5 text-[#C9A84C]" />
-            <h1 className="text-lg font-bold text-white">Manage Streams</h1>
+            <Monitor className="h-5 w-5 text-gold" />
+            <h1 className="text-lg font-bold text-text-primary">Manage Streams</h1>
           </div>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 rounded-lg bg-[#C9A84C] px-4 py-2 text-xs font-semibold text-[#0A0E1A] transition-colors hover:bg-[#D4B85A] disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-gold px-4 py-2 text-xs font-semibold text-navy transition-colors hover:bg-gold-light disabled:opacity-50"
           >
             <Save className="h-3.5 w-3.5" />
             {saving ? "Saving..." : saved ? "Saved!" : "Save Changes"}
@@ -160,10 +159,10 @@ export default function ManagePage() {
         {/* Channels List */}
         <section>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-zinc-300">Channels</h2>
+            <h2 className="text-sm font-semibold text-text-secondary">Channels</h2>
             <button
               onClick={() => setShowAddForm(true)}
-              className="flex items-center gap-1.5 rounded-lg bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:bg-zinc-700"
+              className="flex items-center gap-1.5 rounded-lg bg-surface-elevated px-3 py-1.5 text-xs font-medium text-text-tertiary transition-colors hover:bg-surface-hover"
             >
               <Plus className="h-3.5 w-3.5" />
               Add Channel
@@ -171,11 +170,11 @@ export default function ManagePage() {
           </div>
 
           {channels.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-800 bg-zinc-900/30 py-10">
-              <p className="text-sm text-zinc-500">No channels configured yet</p>
+            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border-default bg-surface-card/40 py-10">
+              <p className="text-sm text-text-muted">No channels configured yet</p>
               <button
                 onClick={() => setShowAddForm(true)}
-                className="mt-3 text-xs text-[#C9A84C] hover:underline"
+                className="mt-3 text-xs text-gold hover:underline"
               >
                 Add your first channel
               </button>
@@ -185,20 +184,19 @@ export default function ManagePage() {
               {channels.map((ch) => (
                 <div
                   key={ch.id}
-                  className="rounded-xl border border-zinc-800/60 bg-zinc-900/40 transition-all duration-200 hover:border-zinc-700/60"
+                  className="rounded-xl border border-border-default bg-surface-card/60 transition-all duration-200 hover:border-border-accent"
                 >
                   {/* Channel header row */}
                   <div className="flex items-center justify-between px-4 py-3">
                     <div className="flex items-center gap-3 min-w-0 flex-1">
-                      {/* Channel name & country */}
                       <div className="flex items-center gap-2.5 min-w-0">
                         {getTypeIcon(ch.type, !!ch.youtubeVideoId)}
                         <div className="min-w-0">
-                          <span className="text-sm font-medium text-zinc-200 truncate block">
+                          <span className="text-sm font-medium text-text-secondary truncate block">
                             {ch.name}
                           </span>
                           {ch.country && (
-                            <span className="text-[10px] uppercase tracking-wider text-zinc-600">
+                            <span className="text-[10px] uppercase tracking-wider text-text-muted">
                               {ch.country}
                             </span>
                           )}
@@ -221,7 +219,7 @@ export default function ManagePage() {
                             : "HLS"}
                       </span>
                       {ch.isDefault && (
-                        <span className="shrink-0 rounded bg-[#C9A84C]/10 px-1.5 py-0.5 text-[10px] text-[#C9A84C]">
+                        <span className="shrink-0 rounded bg-gold/10 px-1.5 py-0.5 text-[10px] text-gold">
                           Default
                         </span>
                       )}
@@ -242,7 +240,7 @@ export default function ManagePage() {
                               setEditingId(null);
                               setEditForm({});
                             }}
-                            className="rounded-lg bg-zinc-800 p-1.5 text-zinc-500 transition-colors hover:bg-zinc-700 hover:text-zinc-400"
+                            className="rounded-lg bg-surface-elevated p-1.5 text-text-muted transition-colors hover:bg-surface-hover hover:text-text-tertiary"
                           >
                             <X className="h-3.5 w-3.5" />
                           </button>
@@ -250,7 +248,7 @@ export default function ManagePage() {
                       ) : (
                         <button
                           onClick={() => startEdit(ch)}
-                          className="rounded-lg bg-zinc-800/80 p-1.5 text-zinc-500 transition-colors hover:bg-zinc-700 hover:text-zinc-300"
+                          className="rounded-lg bg-surface-elevated/80 p-1.5 text-text-muted transition-colors hover:bg-surface-hover hover:text-text-tertiary"
                         >
                           <Edit3 className="h-3.5 w-3.5" />
                         </button>
@@ -260,7 +258,7 @@ export default function ManagePage() {
 
                   {/* Expanded: Edit form */}
                   {editingId === ch.id && (
-                    <div className="border-t border-zinc-800/40 px-4 py-3 space-y-2">
+                    <div className="border-t border-border-default px-4 py-3 space-y-2">
                       <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                         <input
                           value={editForm.name || ""}
@@ -268,7 +266,7 @@ export default function ManagePage() {
                             setEditForm((f) => ({ ...f, name: e.target.value }))
                           }
                           placeholder="Channel name"
-                          className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50"
+                          className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-1.5 text-xs text-text-secondary outline-none focus:border-gold/50"
                         />
                         <input
                           value={editForm.country || ""}
@@ -276,7 +274,7 @@ export default function ManagePage() {
                             setEditForm((f) => ({ ...f, country: e.target.value }))
                           }
                           placeholder="Country code"
-                          className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50"
+                          className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-1.5 text-xs text-text-secondary outline-none focus:border-gold/50"
                         />
                         <select
                           value={editForm.type || "hls"}
@@ -286,7 +284,7 @@ export default function ManagePage() {
                               type: e.target.value as "hls" | "iframe",
                             }))
                           }
-                          className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50"
+                          className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-1.5 text-xs text-text-secondary outline-none focus:border-gold/50"
                         >
                           <option value="hls">Type: HLS</option>
                           <option value="iframe">Type: Iframe</option>
@@ -302,7 +300,7 @@ export default function ManagePage() {
                             }))
                           }
                           placeholder="HLS .m3u8 URL"
-                          className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50 font-mono"
+                          className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-1.5 text-xs text-text-secondary outline-none focus:border-gold/50 font-mono"
                         />
                         <input
                           value={editForm.embedUrl || ""}
@@ -313,7 +311,7 @@ export default function ManagePage() {
                             }))
                           }
                           placeholder="Iframe embed URL"
-                          className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50 font-mono"
+                          className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-1.5 text-xs text-text-secondary outline-none focus:border-gold/50 font-mono"
                         />
                         <input
                           value={editForm.youtubeVideoId || ""}
@@ -324,7 +322,7 @@ export default function ManagePage() {
                             }))
                           }
                           placeholder="YouTube Video ID"
-                          className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50 font-mono"
+                          className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-1.5 text-xs text-text-secondary outline-none focus:border-gold/50 font-mono"
                         />
                       </div>
                     </div>
@@ -336,14 +334,14 @@ export default function ManagePage() {
 
           {/* Add Channel Form */}
           {showAddForm && (
-            <div className="mt-4 rounded-xl border border-[#C9A84C]/20 bg-zinc-900/60 p-4">
+            <div className="mt-4 rounded-xl border border-gold/20 bg-surface-card/60 p-4">
               <div className="mb-3 flex items-center justify-between">
-                <h3 className="text-xs font-semibold text-zinc-300">
+                <h3 className="text-xs font-semibold text-text-secondary">
                   New Channel
                 </h3>
                 <button
                   onClick={() => setShowAddForm(false)}
-                  className="rounded p-1 text-zinc-500 hover:bg-zinc-800"
+                  className="rounded p-1 text-text-muted hover:bg-surface-hover"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -355,7 +353,7 @@ export default function ManagePage() {
                     setNewChannel((f) => ({ ...f, id: e.target.value }))
                   }
                   placeholder="Channel ID"
-                  className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50"
+                  className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-2 text-xs text-text-secondary outline-none focus:border-gold/50"
                 />
                 <input
                   value={newChannel.name}
@@ -363,7 +361,7 @@ export default function ManagePage() {
                     setNewChannel((f) => ({ ...f, name: e.target.value }))
                   }
                   placeholder="Name"
-                  className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50"
+                  className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-2 text-xs text-text-secondary outline-none focus:border-gold/50"
                 />
                 <input
                   value={newChannel.country}
@@ -371,7 +369,7 @@ export default function ManagePage() {
                     setNewChannel((f) => ({ ...f, country: e.target.value }))
                   }
                   placeholder="Country code"
-                  className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50"
+                  className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-2 text-xs text-text-secondary outline-none focus:border-gold/50"
                 />
               </div>
               <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -383,7 +381,7 @@ export default function ManagePage() {
                       type: e.target.value as "hls" | "iframe",
                     }))
                   }
-                  className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50"
+                  className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-2 text-xs text-text-secondary outline-none focus:border-gold/50"
                 >
                   <option value="hls">Type: HLS (.m3u8)</option>
                   <option value="iframe">Type: Iframe Embed</option>
@@ -406,7 +404,7 @@ export default function ManagePage() {
                       ? "https://embed-url.com/stream"
                       : "HLS Stream URL (.m3u8)"
                   }
-                  className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50"
+                  className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-2 text-xs text-text-secondary outline-none focus:border-gold/50"
                 />
                 <input
                   value={newChannel.youtubeVideoId || ""}
@@ -417,11 +415,11 @@ export default function ManagePage() {
                     }))
                   }
                   placeholder="YouTube Video ID (optional)"
-                  className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-xs text-zinc-300 outline-none focus:border-[#C9A84C]/50"
+                  className="rounded-lg border border-border-default bg-surface-card/60 px-3 py-2 text-xs text-text-secondary outline-none focus:border-gold/50"
                 />
               </div>
               <div className="mt-3 flex items-center gap-3">
-                <label className="flex items-center gap-2 text-xs text-zinc-500">
+                <label className="flex items-center gap-2 text-xs text-text-muted">
                   <input
                     type="checkbox"
                     checked={newChannel.isDefault || false}
@@ -431,14 +429,14 @@ export default function ManagePage() {
                         isDefault: e.target.checked,
                       }))
                     }
-                    className="rounded border-zinc-800 bg-zinc-900"
+                    className="rounded border-border-default bg-surface-card"
                   />
                   Default channel
                 </label>
                 <button
                   onClick={addChannel}
                   disabled={!newChannel.id || !newChannel.name}
-                  className="rounded-lg bg-[#C9A84C] px-4 py-1.5 text-xs font-semibold text-[#0A0E1A] transition-colors hover:bg-[#D4B85A] disabled:opacity-50"
+                  className="rounded-lg bg-gold px-4 py-1.5 text-xs font-semibold text-navy transition-colors hover:bg-gold-light disabled:opacity-50"
                 >
                   Add
                 </button>

@@ -1,60 +1,185 @@
 @import "tailwindcss";
 
+/* ============================================================
+   THEME: Fonts
+   ============================================================ */
 @theme inline {
-  --font-sans: var(--font-inter);
-  --font-heading: var(--font-barlow-condensed);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-barlow-condensed), "Arial Narrow", Impact, sans-serif;
+  --font-accent: var(--font-playfair), Georgia, "Times New Roman", serif;
+}
+
+/* ============================================================
+   THEME: Colors — mapped to CSS custom properties so they
+   change with the theme class on <html>.
+   ============================================================ */
+@theme inline {
+  /* --- Surface tokens --- */
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-card: var(--surface-card);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-overlay: var(--surface-overlay);
+
+  /* --- Glass tokens --- */
+  --color-glass-bg: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
+  --color-glass-gold-bg: var(--glass-gold-bg);
+  --color-glass-gold-border: var(--glass-gold-border);
+
+  /* --- Text tokens --- */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+
+  /* --- Border tokens --- */
+  --color-border-default: var(--border-default);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-accent: var(--border-accent);
+
+  /* --- Accent palette (unchanged between themes) --- */
   --color-gold: #C9A84C;
   --color-gold-light: #D4B85A;
   --color-gold-dark: #A68B2E;
   --color-crimson: #C41E3A;
   --color-navy: #0A0E1A;
   --color-navy-light: #111827;
-  --color-card: #111827;
-  --color-card-hover: #1a2235;
 }
 
-/* ===== Scrollbar ===== */
+/* ============================================================
+   DARK THEME (default)
+   ============================================================ */
+:root,
+.dark {
+  --surface: #0A0E1A;
+  --surface-elevated: #131829;
+  --surface-card: #111827;
+  --surface-hover: #1a2235;
+  --surface-overlay: rgba(0, 0, 0, 0.6);
+
+  --glass-bg: rgba(17, 24, 39, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-gold-bg: rgba(201, 168, 76, 0.08);
+  --glass-gold-border: rgba(201, 168, 76, 0.15);
+
+  --text-primary: #F8FAFC;
+  --text-secondary: #E2E8F0;
+  --text-tertiary: #94A3B8;
+  --text-muted: #64748B;
+  --text-subtle: #475569;
+
+  --border-default: #1E293B;
+  --border-subtle: #0F172A;
+  --border-accent: rgba(201, 168, 76, 0.15);
+
+  color-scheme: dark;
+}
+
+/* ============================================================
+   LIGHT THEME
+   ============================================================ */
+.light {
+  --surface: #F6F4F0;
+  --surface-elevated: #EBE8E3;
+  --surface-card: #FFFFFF;
+  --surface-hover: #F3F2EF;
+  --surface-overlay: rgba(0, 0, 0, 0.08);
+
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-gold-bg: rgba(201, 168, 76, 0.10);
+  --glass-gold-border: rgba(201, 168, 76, 0.25);
+
+  --text-primary: #1A1A2E;
+  --text-secondary: #3F3F46;
+  --text-tertiary: #52525B;
+  --text-muted: #A1A1AA;
+  --text-subtle: #D4D4D8;
+
+  --border-default: #E4E4E7;
+  --border-subtle: #F4F4F5;
+  --border-accent: rgba(201, 168, 76, 0.20);
+
+  color-scheme: light;
+}
+
+/* ============================================================
+   SMOOTH THEME TRANSITIONS
+   ============================================================ */
+html,
+body,
+*,
+*::before,
+*::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ============================================================
+   SCROLLBAR — theme-aware
+   ============================================================ */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #374151; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
 
-/* ===== Selection ===== */
-::selection { background: rgba(201, 168, 76, 0.25); color: #fbbf24; }
+/* ============================================================
+   SELECTION
+   ============================================================ */
+::selection {
+  background: rgba(201, 168, 76, 0.25);
+  color: var(--text-primary);
+}
 
-/* ===== Base ===== */
+/* ============================================================
+   BASE
+   ============================================================ */
 html { scroll-behavior: smooth; }
 
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--surface);
+  color: var(--text-secondary);
 }
 
-/* ===== Glass morphism utility ===== */
+/* ============================================================
+   GLASS MORPHISM UTILITIES — theme-aware
+   ============================================================ */
 .glass {
-  background: rgba(17, 24, 39, 0.6);
+  background: var(--glass-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
 }
 
 .glass-gold {
-  background: rgba(201, 168, 76, 0.08);
+  background: var(--glass-gold-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(201, 168, 76, 0.15);
+  border: 1px solid var(--glass-gold-border);
 }
 
-/* ===== Card hover glow ===== */
+/* ============================================================
+   CARD HOVER GLOW — theme-aware
+   ============================================================ */
 .card-glow {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .card-glow:hover {
-  border-color: rgba(201, 168, 76, 0.4);
+  border-color: var(--border-accent);
   box-shadow: 0 0 30px rgba(201, 168, 76, 0.08), 0 0 60px rgba(201, 168, 76, 0.04);
 }
 
-/* ===== Animations ===== */
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
 @keyframes scoreboard-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }
@@ -80,6 +205,16 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 .animate-slide-up {
   animation: slide-up 0.5s ease-out forwards;
 }
@@ -96,7 +231,13 @@ body {
   animation: stadium-glow 3s ease-in-out infinite;
 }
 
-/* ===== Gold text gradient ===== */
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ============================================================
+   GOLD TEXT GRADIENT
+   ============================================================ */
 .text-gradient-gold {
   background: linear-gradient(135deg, #C9A84C 0%, #D4B85A 40%, #C9A84C 70%, #A68B2E 100%);
   -webkit-background-clip: text;
@@ -104,7 +245,9 @@ body {
   background-clip: text;
 }
 
-/* ===== Prevent text selection site-wide ===== */
+/* ============================================================
+   PREVENT TEXT SELECTION SITE-WIDE
+   ============================================================ */
 * {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -112,7 +255,6 @@ body {
   user-select: none;
 }
 
-/* Allow text selection in inputs and textareas */
 input, textarea, [contenteditable] {
   -webkit-user-select: text;
   -moz-user-select: text;
@@ -120,7 +262,9 @@ input, textarea, [contenteditable] {
   user-select: text;
 }
 
-/* ===== Prevent image dragging ===== */
+/* ============================================================
+   PREVENT IMAGE DRAGGING
+   ============================================================ */
 img {
   -webkit-user-drag: none;
   -khtml-user-drag: none;
@@ -129,7 +273,9 @@ img {
   user-drag: none;
 }
 
-/* ===== Responsive video container ===== */
+/* ============================================================
+   RESPONSIVE VIDEO CONTAINER
+   ============================================================ */
 .video-container {
   position: relative;
   width: 100%;
@@ -137,4 +283,64 @@ img {
   overflow: hidden;
   border-radius: 12px;
   background: #000;
+}
+
+/* ============================================================
+   TYPOGRAPHY ENHANCEMENTS
+   ============================================================ */
+
+/* Better heading hierarchy */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+/* Accent serif for special premium text */
+.font-accent {
+  font-family: var(--font-accent);
+}
+
+/* Improved prose readability */
+.prose-body {
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   SKELETON LOADER — theme-aware
+   ============================================================ */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border-subtle) 25%,
+    var(--border-default) 50%,
+    var(--border-subtle) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ============================================================
+   THEME TOGGLE BUTTON GLOW
+   ============================================================ */
+.theme-toggle-glow {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.light .theme-toggle-glow:hover {
+  box-shadow: 0 0 16px rgba(255, 193, 7, 0.25), 0 0 32px rgba(255, 193, 7, 0.1);
+}
+
+.dark .theme-toggle-glow:hover {
+  box-shadow: 0 0 16px rgba(147, 197, 253, 0.25), 0 0 32px rgba(147, 197, 253, 0.1);
+}
+
+/* ============================================================
+   LINK STYLING
+   ============================================================ */
+a {
+  transition: color 0.2s ease;
 }

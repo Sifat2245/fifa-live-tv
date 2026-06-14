@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Play, Tv, Film, Globe } from "lucide-react";
+import { Tv, Film, Globe } from "lucide-react";
 import type { StreamChannel } from "@/lib/types";
 import HLSPlayer from "./HLSPlayer";
 
@@ -108,12 +108,12 @@ export default function StreamPlayer({ channel }: StreamPlayerProps) {
   }
 
   return (
-    <div className="flex aspect-video items-center justify-center rounded-xl border border-dashed border-zinc-800 bg-zinc-900/80">
+    <div className="flex aspect-video items-center justify-center rounded-xl border border-dashed border-border-default bg-surface-elevated">
       <div className="flex flex-col items-center gap-3 text-center">
-        <Tv className="h-10 w-10 text-zinc-700" />
+        <Tv className="h-10 w-10 text-text-muted" />
         <div>
-          <p className="text-sm font-medium text-zinc-500">No stream source configured</p>
-          <p className="mt-1 text-xs text-zinc-600">
+          <p className="text-sm font-medium text-text-muted">No stream source configured</p>
+          <p className="mt-1 text-xs text-text-subtle">
             Add a stream URL, embed URL, or YouTube video ID in Manage
           </p>
         </div>

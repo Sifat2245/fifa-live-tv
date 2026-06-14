@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, MapPin, Tv } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 import { getFlagUrl, isLive, isFinished, getLocalTime } from "@/lib/utils";
 import CountdownTimer from "./CountdownTimer";
 import LiveBadge from "./LiveBadge";
@@ -36,11 +36,11 @@ export default function MatchCard({ match }: MatchCardProps) {
   return (
     <Link
       href={`/match/${match.id}`}
-      className="group card-glow relative flex flex-col overflow-hidden rounded-2xl border border-zinc-800/50 bg-gradient-to-b from-[#111827] to-[#0F1625] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+      className="group card-glow relative flex flex-col overflow-hidden rounded-2xl border border-border-default bg-gradient-to-b from-surface-card to-surface-elevated transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
     >
       {/* Top accent bar */}
       <div className={`h-1 w-full bg-gradient-to-r ${
-        live ? "from-[#C41E3A] via-red-500 to-[#C41E3A]" : "from-[#C9A84C]/30 via-[#C9A84C]/10 to-transparent"
+        live ? "from-crimson via-red-500 to-crimson" : "from-gold/30 via-gold/10 to-transparent"
       }`} />
 
       <div className="flex flex-col p-4">
@@ -48,7 +48,7 @@ export default function MatchCard({ match }: MatchCardProps) {
         <div className="flex items-center justify-between gap-2">
           {/* Home team */}
           <div className="flex flex-1 flex-col items-center gap-2">
-            <div className={`relative flex h-12 w-16 items-center justify-center rounded-xl bg-gradient-to-br ${homeColors.badge} border border-zinc-700/30`}>
+            <div className={`relative flex h-12 w-16 items-center justify-center rounded-xl bg-gradient-to-br ${homeColors.badge} border border-border-default`}>
               {homeFlag ? (
                 <img src={homeFlag} alt={match.homeTeam.name} className="h-8 w-12 rounded object-cover" />
               ) : (
@@ -57,7 +57,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                 </span>
               )}
             </div>
-            <span className="text-center text-[11px] font-semibold text-zinc-300 leading-tight line-clamp-1 max-w-[80px]">
+            <span className="text-center text-[11px] font-semibold text-text-secondary leading-tight line-clamp-1 max-w-[80px]">
               {match.homeTeam.name}
             </span>
           </div>
@@ -67,25 +67,25 @@ export default function MatchCard({ match }: MatchCardProps) {
             {live || finished ? (
               <div className="flex items-center gap-1.5">
                 <span className={`text-2xl font-black tabular-nums ${
-                  live ? "text-white" : "text-zinc-300"
+                  live ? "text-text-primary" : "text-text-tertiary"
                 }`}>
-                  {match.score.home ?? "-"}
+                  {match.score.home ?? "—"}
                 </span>
-                <span className={`text-sm font-bold ${live ? "text-[#C41E3A]/60" : "text-zinc-600"}`}>:</span>
+                <span className={`text-sm font-bold ${live ? "text-crimson/60" : "text-text-subtle"}`}>:</span>
                 <span className={`text-2xl font-black tabular-nums ${
-                  live ? "text-white" : "text-zinc-300"
+                  live ? "text-text-primary" : "text-text-tertiary"
                 }`}>
-                  {match.score.away ?? "-"}
+                  {match.score.away ?? "—"}
                 </span>
               </div>
             ) : (
-              <span className="text-base font-black text-[#C9A84C] tracking-wider">VS</span>
+              <span className="text-base font-black text-gold tracking-wider font-accent">VS</span>
             )}
 
             {/* Status */}
             {live && <LiveBadge />}
             {finished && (
-              <span className="rounded-md bg-zinc-800/80 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-zinc-500">
+              <span className="rounded-md bg-surface-elevated px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-text-muted">
                 FT
               </span>
             )}
@@ -93,7 +93,7 @@ export default function MatchCard({ match }: MatchCardProps) {
 
           {/* Away team */}
           <div className="flex flex-1 flex-col items-center gap-2">
-            <div className={`relative flex h-12 w-16 items-center justify-center rounded-xl bg-gradient-to-br ${awayColors.badge} border border-zinc-700/30`}>
+            <div className={`relative flex h-12 w-16 items-center justify-center rounded-xl bg-gradient-to-br ${awayColors.badge} border border-border-default`}>
               {awayFlag ? (
                 <img src={awayFlag} alt={match.awayTeam.name} className="h-8 w-12 rounded object-cover" />
               ) : (
@@ -102,37 +102,37 @@ export default function MatchCard({ match }: MatchCardProps) {
                 </span>
               )}
             </div>
-            <span className="text-center text-[11px] font-semibold text-zinc-300 leading-tight line-clamp-1 max-w-[80px]">
+            <span className="text-center text-[11px] font-semibold text-text-secondary leading-tight line-clamp-1 max-w-[80px]">
               {match.awayTeam.name}
             </span>
           </div>
         </div>
 
         {/* Bottom meta */}
-        <div className="mt-3 flex items-center justify-between border-t border-zinc-800/30 pt-2.5">
-          <div className="flex items-center gap-1 text-[10px] text-zinc-500">
-            <MapPin className="h-3 w-3 text-zinc-600" />
+        <div className="mt-3 flex items-center justify-between border-t border-border-default pt-2.5">
+          <div className="flex items-center gap-1 text-[10px] text-text-muted">
+            <MapPin className="h-3 w-3 text-text-subtle" />
             <span className="truncate max-w-[110px]">{match.venue?.split(",")[0] || "TBD"}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+          <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
             {live ? (
-              <span className="flex items-center gap-1 font-bold text-red-400">
+              <span className="flex items-center gap-1 font-bold text-crimson">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-60" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-red-500" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-crimson opacity-60" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-crimson" />
                 </span>
                 LIVE
               </span>
             ) : finished ? (
-              <span className="text-zinc-600">Full Time</span>
+              <span className="text-text-muted">Full Time</span>
             ) : (
               <>
-                <Clock className="h-3 w-3 text-zinc-600" />
+                <Clock className="h-3 w-3 text-text-subtle" />
                 <span className="tabular-nums"><CountdownTimer kickoff={match.kickoff} /></span>
               </>
             )}
             {!live && !finished && (
-              <span className="text-zinc-600">· {getLocalTime(match.kickoff)}</span>
+              <span className="text-text-subtle">· {getLocalTime(match.kickoff)}</span>
             )}
           </div>
         </div>

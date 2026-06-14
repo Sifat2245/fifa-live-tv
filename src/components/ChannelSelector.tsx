@@ -78,8 +78,8 @@ export default function ChannelSelector({
         }}
         className={`flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left text-xs transition-all duration-200 ${
           isActive
-            ? "border-[#C9A84C]/60 bg-[#C9A84C]/10 text-[#C9A84C] shadow-sm shadow-[#C9A84C]/10"
-            : "border-zinc-800/60 bg-zinc-900/60 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300"
+            ? "border-gold/60 bg-gold/10 text-gold shadow-sm shadow-gold/10"
+            : "border-border-default bg-surface-card/60 text-text-tertiary hover:border-border-accent hover:text-text-secondary"
         }`}
       >
         {/* Logo or icon */}
@@ -93,7 +93,7 @@ export default function ChannelSelector({
             }}
           />
         ) : (
-          <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-zinc-800">
+          <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-surface-elevated">
             {ch.youtubeVideoId ? (
               <Film className="h-3 w-3 text-red-400" />
             ) : ch.type === "iframe" ? (
@@ -108,14 +108,14 @@ export default function ChannelSelector({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             {isActive && (
-              <Check className="h-3 w-3 shrink-0 text-[#C9A84C]" />
+              <Check className="h-3 w-3 shrink-0 text-gold" />
             )}
             <span className="truncate font-medium">{ch.name}</span>
           </div>
         </div>
 
         {/* Country badge */}
-        <span className="shrink-0 rounded border border-zinc-800/60 px-1.5 py-0.5 text-[9px] font-medium text-zinc-600">
+        <span className="shrink-0 rounded border border-border-default px-1.5 py-0.5 text-[9px] font-medium text-text-muted">
           {ch.country}
         </span>
       </button>
@@ -124,7 +124,7 @@ export default function ChannelSelector({
 
   if (channels.length === 0) {
     return (
-      <div className="rounded-lg bg-zinc-900/50 px-4 py-3 text-center text-xs text-zinc-500">
+      <div className="rounded-lg bg-surface-card/50 px-4 py-3 text-center text-xs text-text-muted">
         No channels configured for this match
       </div>
     );
@@ -134,18 +134,18 @@ export default function ChannelSelector({
     <div>
       {/* Search */}
       <div className="relative mb-3">
-        <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" />
+        <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" />
         <input
           type="text"
           placeholder="Search channels by name or country..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-lg border border-zinc-800/60 bg-zinc-900/60 py-2 pl-9 pr-8 text-xs text-zinc-300 placeholder-zinc-600 transition-colors focus:border-[#C9A84C]/40 focus:outline-none focus:ring-1 focus:ring-[#C9A84C]/20"
+          className="w-full rounded-lg border border-border-default bg-surface-card/60 py-2 pl-9 pr-8 text-xs text-text-secondary placeholder-text-muted transition-colors focus:border-gold/40 focus:outline-none focus:ring-1 focus:ring-gold/20"
         />
         {search && (
           <button
             onClick={() => setSearch("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 transition-colors hover:text-zinc-300"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted transition-colors hover:text-text-tertiary"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -157,11 +157,11 @@ export default function ChannelSelector({
         {/* Default channels section */}
         {defaultChannels.length > 0 && (
           <div>
-            <div className="sticky top-0 z-10 mb-1.5 flex items-center gap-2 bg-zinc-900/95 py-1.5 backdrop-blur-sm">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C9A84C]/80">
+            <div className="sticky top-0 z-10 mb-1.5 flex items-center gap-2 bg-surface-card/95 py-1.5 backdrop-blur-sm">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gold/80">
                 ★ Featured
               </span>
-              <span className="rounded-full bg-[#C9A84C]/10 px-1.5 py-0.5 text-[9px] font-medium text-[#C9A84C]/60">
+              <span className="rounded-full bg-gold/10 px-1.5 py-0.5 text-[9px] font-medium text-gold/60">
                 {defaultChannels.length}
               </span>
             </div>
@@ -176,17 +176,17 @@ export default function ChannelSelector({
           <div>
             {/* Divider */}
             {defaultChannels.length > 0 && (
-              <div className="my-3 border-t border-zinc-800/40" />
+              <div className="my-3 border-t border-border-default" />
             )}
 
             {groupedChannels.map(([country, countryChannels]) => (
               <div key={country} className="mb-4">
                 {/* Sticky country header */}
-                <div className="sticky top-0 z-10 mb-1.5 flex items-center gap-2 bg-zinc-900/95 py-1.5 backdrop-blur-sm">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <div className="sticky top-0 z-10 mb-1.5 flex items-center gap-2 bg-surface-card/95 py-1.5 backdrop-blur-sm">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
                     {COUNTRY_NAMES[country] || country}
                   </span>
-                  <span className="rounded-full bg-zinc-800 px-1.5 py-0.5 text-[9px] font-medium text-zinc-600">
+                  <span className="rounded-full bg-surface-elevated px-1.5 py-0.5 text-[9px] font-medium text-text-muted">
                     {countryChannels.length}
                   </span>
                 </div>
@@ -203,10 +203,10 @@ export default function ChannelSelector({
         {/* Empty state */}
         {defaultChannels.length === 0 && groupedChannels.length === 0 && (
           <div className="flex flex-col items-center gap-2 py-10 text-center">
-            <Search className="h-6 w-6 text-zinc-700" />
-            <p className="text-xs text-zinc-500">
+            <Search className="h-6 w-6 text-text-muted" />
+            <p className="text-xs text-text-muted">
               No channels match{" "}
-              <span className="text-zinc-400">&ldquo;{search}&rdquo;</span>
+              <span className="text-text-tertiary">&ldquo;{search}&rdquo;</span>
             </p>
           </div>
         )}

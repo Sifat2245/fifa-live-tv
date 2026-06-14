@@ -208,8 +208,8 @@ export default function HLSPlayer({ streamUrl, poster }: HLSPlayerProps) {
       {isLoading && !hasError && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="flex flex-col items-center gap-3">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#C9A84C]/30 border-t-[#C9A84C]" />
-            <span className="text-xs font-medium tracking-wider text-[#C9A84C] animate-pulse">
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-gold/30 border-t-gold" />
+            <span className="text-xs font-medium tracking-wider text-gold animate-pulse">
               Loading Stream
             </span>
           </div>
@@ -229,7 +229,7 @@ export default function HLSPlayer({ streamUrl, poster }: HLSPlayerProps) {
             </div>
             <button
               onClick={(e) => { e.stopPropagation(); handleRetry(); }}
-              className="flex items-center gap-2 rounded-lg bg-[#C9A84C] px-4 py-2 text-xs font-semibold text-[#0A0E1A] transition-colors hover:bg-[#D4B85A]"
+              className="flex items-center gap-2 rounded-lg bg-gold px-4 py-2 text-xs font-semibold text-navy transition-colors hover:bg-gold-light"
             >
               <RefreshCw className="h-3.5 w-3.5" />
               Retry
@@ -241,8 +241,8 @@ export default function HLSPlayer({ streamUrl, poster }: HLSPlayerProps) {
       {/* Play overlay */}
       {!isPlaying && !isLoading && !hasError && (
         <div className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/20 backdrop-blur-[1px]" onClick={togglePlay}>
-          <div className="transform rounded-full bg-[#C9A84C]/90 p-5 shadow-2xl shadow-[#C9A84C]/30 transition-all duration-300 hover:scale-110 hover:bg-[#C9A84C] active:scale-95">
-            <svg className="h-10 w-10 text-[#0A0E1A]" fill="currentColor" viewBox="0 0 24 24">
+          <div className="transform rounded-full bg-gold/90 p-5 shadow-2xl shadow-gold/30 transition-all duration-300 hover:scale-110 hover:bg-gold active:scale-95">
+            <svg className="h-10 w-10 text-navy" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z" />
             </svg>
           </div>

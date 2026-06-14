@@ -69,20 +69,20 @@ export default function ClientMatchPage({
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       {/* ===== LIVE SCORE BANNER ===== */}
       {live && (
-        <div className="glass mb-5 flex items-center gap-3 rounded-xl border-[#C41E3A]/20 px-5 py-3">
+        <div className="glass mb-5 flex items-center gap-3 rounded-xl border-crimson/20 px-5 py-3">
           <span className="relative flex h-3 w-3">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#C41E3A] opacity-60" />
-            <span className="relative inline-flex h-3 w-3 rounded-full bg-[#C41E3A]" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-crimson opacity-60" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-crimson" />
           </span>
-          <span className="text-sm font-black text-white tracking-tight">
-            <span className="text-zinc-300 font-bold">{match.homeTeam.name}</span>{" "}
-            <span className="text-2xl mx-1.5 tabular-nums">{match.score.home ?? "-"}</span>
-            <span className="text-zinc-600">—</span>
-            <span className="text-2xl mx-1.5 tabular-nums">{match.score.away ?? "-"}</span>{" "}
-            <span className="text-zinc-300 font-bold">{match.awayTeam.name}</span>
+          <span className="text-sm font-black text-text-primary tracking-tight">
+            <span className="text-text-secondary font-bold">{match.homeTeam.name}</span>{" "}
+            <span className="text-2xl mx-1.5 tabular-nums">{match.score.home ?? "—"}</span>
+            <span className="text-text-muted">—</span>
+            <span className="text-2xl mx-1.5 tabular-nums">{match.score.away ?? "—"}</span>{" "}
+            <span className="text-text-secondary font-bold">{match.awayTeam.name}</span>
           </span>
-          <RefreshCw className="ml-auto h-3.5 w-3.5 animate-spin text-zinc-500" />
-          <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Live</span>
+          <RefreshCw className="ml-auto h-3.5 w-3.5 animate-spin text-text-muted" />
+          <span className="text-[10px] font-medium text-text-muted uppercase tracking-wider">Live</span>
         </div>
       )}
 
@@ -90,25 +90,25 @@ export default function ClientMatchPage({
         {/* ===== MAIN CONTENT ===== */}
         <div className="lg:col-span-3 space-y-4">
           {/* Player */}
-          <div className="rounded-2xl overflow-hidden bg-black border border-zinc-800/40">
+          <div className="rounded-2xl overflow-hidden bg-black border border-border-default">
             {loading ? (
-              <div className="flex aspect-video items-center justify-center bg-zinc-900">
+              <div className="flex aspect-video items-center justify-center bg-surface">
                 <div className="flex flex-col items-center gap-3">
-                  <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#C9A84C]/20 border-t-[#C9A84C]" />
-                  <span className="text-xs text-zinc-500 font-medium tracking-wide">Loading stream...</span>
+                  <div className="h-10 w-10 animate-spin rounded-full border-2 border-gold/20 border-t-gold" />
+                  <span className="text-xs text-text-muted font-medium tracking-wide">Loading stream...</span>
                 </div>
               </div>
             ) : activeChannel ? (
               <StreamPlayer key={activeChannel.id} channel={activeChannel} />
             ) : (
-              <div className="flex aspect-video items-center justify-center bg-zinc-900/80">
+              <div className="flex aspect-video items-center justify-center bg-surface-elevated">
                 <div className="flex flex-col items-center gap-3 text-center">
-                  <Monitor className="h-12 w-12 text-zinc-700" />
+                  <Monitor className="h-12 w-12 text-text-muted" />
                   <div>
-                    <p className="text-sm font-medium text-zinc-500">
+                    <p className="text-sm font-medium text-text-muted">
                       {channels.length > 0 ? "Select a channel to start watching" : "No streams configured"}
                     </p>
-                    <p className="mt-1 text-xs text-zinc-600">
+                    <p className="mt-1 text-xs text-text-subtle">
                       {channels.length > 0 ? "Click a channel below" : "Add stream URLs in Manage"}
                     </p>
                   </div>
@@ -120,11 +120,11 @@ export default function ClientMatchPage({
           {/* Channel selector */}
           <div className="glass rounded-xl p-4">
             <div className="mb-3 flex items-center gap-2">
-              <Radio className="h-4 w-4 text-[#C9A84C]" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+              <Radio className="h-4 w-4 text-gold" />
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text-tertiary">
                 Available Channels
               </h3>
-              <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[10px] text-zinc-500">
+              <span className="rounded-full bg-border-default px-2 py-0.5 text-[10px] text-text-muted">
                 {channels.length}
               </span>
             </div>
@@ -141,40 +141,40 @@ export default function ClientMatchPage({
           {/* Match details */}
           <div className="glass rounded-xl p-4">
             <div className="mb-3 flex items-center gap-2">
-              <ListVideo className="h-4 w-4 text-zinc-500" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+              <ListVideo className="h-4 w-4 text-text-muted" />
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text-muted">
                 Match Details
               </h3>
             </div>
             <div className="space-y-2.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-zinc-500">Stage</span>
-                <span className="text-zinc-200 font-medium">{match.stage.replace(/_/g, " ")}</span>
+                <span className="text-text-muted">Stage</span>
+                <span className="text-text-secondary font-medium">{match.stage.replace(/_/g, " ")}</span>
               </div>
               {match.group && (
                 <div className="flex justify-between">
-                  <span className="text-zinc-500">Group</span>
-                  <span className="text-zinc-200 font-medium">{match.group}</span>
+                  <span className="text-text-muted">Group</span>
+                  <span className="text-text-secondary font-medium">{match.group}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-zinc-500">Venue</span>
-                <span className="text-right text-zinc-200 font-medium max-w-[140px]">{match.venue}</span>
+                <span className="text-text-muted">Venue</span>
+                <span className="text-right text-text-secondary font-medium max-w-[140px]">{match.venue}</span>
               </div>
               {match.matchDay && (
                 <div className="flex justify-between">
-                  <span className="text-zinc-500">Matchday</span>
-                  <span className="text-zinc-200 font-medium">{match.matchDay}</span>
+                  <span className="text-text-muted">Matchday</span>
+                  <span className="text-text-secondary font-medium">{match.matchDay}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-zinc-500">Kickoff</span>
-                <span className="text-zinc-200 font-medium">{getLocalTime(match.kickoff)}</span>
+                <span className="text-text-muted">Kickoff</span>
+                <span className="text-text-secondary font-medium">{getLocalTime(match.kickoff)}</span>
               </div>
-              <div className="flex justify-between pt-1 border-t border-zinc-800/30">
-                <span className="text-zinc-500">Status</span>
+              <div className="flex justify-between pt-1 border-t border-border-default">
+                <span className="text-text-muted">Status</span>
                 <span className={`font-bold ${
-                  live ? "text-[#C41E3A]" : match.status === "FINISHED" ? "text-zinc-400" : "text-[#C9A84C]"
+                  live ? "text-crimson" : match.status === "FINISHED" ? "text-text-tertiary" : "text-gold"
                 }`}>
                   {live ? "● Live" : match.status === "FINISHED" ? "Full Time" : "Scheduled"}
                 </span>
@@ -186,8 +186,8 @@ export default function ClientMatchPage({
           {otherMatchesToday.length > 0 && (
             <div className="glass rounded-xl p-4">
               <div className="mb-3 flex items-center gap-2">
-                <Tv className="h-4 w-4 text-zinc-500" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                <Tv className="h-4 w-4 text-text-muted" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-text-muted">
                   Other Matches Today
                 </h3>
               </div>
@@ -196,15 +196,15 @@ export default function ClientMatchPage({
                   <Link
                     key={m.id}
                     href={`/match/${m.id}`}
-                    className="group flex items-center justify-between rounded-lg border border-zinc-800/30 bg-zinc-900/30 px-3 py-2.5 transition-all duration-200 hover:border-zinc-700/60 hover:bg-zinc-900/60"
+                    className="group flex items-center justify-between rounded-lg border border-border-default bg-surface-card/40 px-3 py-2.5 transition-all duration-200 hover:border-border-accent hover:bg-surface-hover"
                   >
                     <div className="flex items-center gap-2 text-xs">
-                      <span className="text-zinc-300 group-hover:text-white transition-colors">{m.homeTeam.name}</span>
-                      <span className="text-zinc-600">vs</span>
-                      <span className="text-zinc-300 group-hover:text-white transition-colors">{m.awayTeam.name}</span>
+                      <span className="text-text-tertiary group-hover:text-text-secondary transition-colors">{m.homeTeam.name}</span>
+                      <span className="text-text-muted">vs</span>
+                      <span className="text-text-tertiary group-hover:text-text-secondary transition-colors">{m.awayTeam.name}</span>
                     </div>
                     {checkIsLive(m.status) && (
-                      <span className="text-[9px] font-bold text-red-400 uppercase tracking-wider">Live</span>
+                      <span className="text-[9px] font-bold text-crimson uppercase tracking-wider">Live</span>
                     )}
                   </Link>
                 ))}
@@ -215,7 +215,7 @@ export default function ClientMatchPage({
           {/* Manage link */}
           <Link
             href="/admin"
-            className="glass flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-xs text-zinc-500 transition-all duration-200 hover:bg-white/[0.02] hover:text-zinc-400 hover:border-zinc-700"
+            className="glass flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-xs text-text-muted transition-all duration-200 hover:bg-surface-hover hover:text-text-tertiary hover:border-border-accent"
           >
             <Shield className="h-3.5 w-3.5" />
             Manage Streams
