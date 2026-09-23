@@ -23,7 +23,7 @@ export interface StreamChannel {
   country: string;
   logo: string;
   streamUrl: string;
-  type: "hls" | "iframe";
+  type: "hls" | "dash" | "iframe";
   embedUrl?: string;
   youtubeVideoId?: string;
   isDefault: boolean;

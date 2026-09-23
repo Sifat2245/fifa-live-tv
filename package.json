@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node api.js && next dev",
+    "build": "node api.js && next build",
+    "start": "node api.js && next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "dashjs": "^5.2.0",
     "date-fns": "^4.4.0",
     "hls.js": "^1.6.16",
     "lucide-react": "^1.18.0",

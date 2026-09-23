@@ -12,6 +12,17 @@
       "youtubeVideoId": ""
     },
     {
+      "id": "fifa2",
+      "name": "FIFA2",
+      "country": "INT",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/FIFA_logo.svg/200px-FIFA_logo.svg.png",
+      "streamUrl": "/dash/stream.mpd",
+      "isDefault": false,
+      "type": "dash",
+      "embedUrl": "",
+      "youtubeVideoId": ""
+    },
+    {
       "id": "bein-xtra",
       "name": "beIN SPORTS XTRA",
       "country": "US",
